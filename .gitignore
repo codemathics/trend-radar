@@ -1,0 +1,8 @@
+memory/secrets.json
+memory/notion_config.json
+cache/
+briefings/
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
