@@ -132,7 +132,7 @@ Always `New` on initial write.
 
 ## What good looks like
 
-A brief is shippable if Clement can read it, walk to his desk, and start filming inside 10 minutes without having to:
+A brief is shippable if you can read it, walk to your desk, and start filming inside 10 minutes without having to:
 - Re-write any hook
 - Figure out what each shot means
 - Look up the trending sound
