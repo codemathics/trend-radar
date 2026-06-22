@@ -1,0 +1,7 @@
+# trend-radar runtime deps
+# install: pip install -r requirements.txt --break-system-packages
+#
+# Stdlib-only fetchers (HN, Reddit, TikTok, YouTube, Product Hunt) don't need
+# anything extra. pytrends is the only external dep.
+
+pytrends>=4.9.2

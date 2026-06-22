@@ -1,0 +1,16 @@
+# user secrets and workspace config (never commit)
+**/memory/secrets.json
+**/memory/notion_config.json
+
+# generated state (clone-mode data lands under the skill folder)
+**/cache/
+**/briefings/
+
+# legacy top-level data dirs from older layouts
+/cache/
+/briefings/
+
+__pycache__/
+*.pyc
+.DS_Store
+.venv/

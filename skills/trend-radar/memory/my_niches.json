@@ -1,0 +1,154 @@
+{
+  "owner": "your-name",
+  "version": "0.1.0",
+  "last_updated": "2026-05-24",
+  "region": {
+    "primary": "US",
+    "secondary": ["UK", "CA", "AU"],
+    "language": "en"
+  },
+  "delivery": {
+    "timezone": "America/Los_Angeles",
+    "briefing_time_local": "06:00",
+    "fetch_time_local": "05:30"
+  },
+  "cadence_target_per_week": 3,
+  "trends_per_day": 3,
+
+  "niches": [
+    {
+      "id": "ai",
+      "label": "AI / LLMs / Models",
+      "weight": 3.0,
+      "keywords": [
+        "AI", "LLM", "GPT", "Claude", "Gemini", "Llama", "Mistral",
+        "AI agent", "agentic", "RAG", "prompt", "context window",
+        "AI tool", "AI workflow", "Sora", "Veo", "Runway", "Pika",
+        "Suno", "ElevenLabs", "Hugging Face", "open source model",
+        "fine-tune", "vibe coding", "AI coding", "Cursor", "Windsurf",
+        "MCP", "model context protocol", "Anthropic", "OpenAI",
+        "computer use", "browser use", "AI native"
+      ],
+      "sources_priority": ["hackernews", "reddit_ai", "x", "producthunt", "youtube"],
+      "subreddits": ["LocalLLaMA", "ChatGPT", "ClaudeAI", "singularity", "MachineLearning", "OpenAI", "artificial"]
+    },
+    {
+      "id": "product_design",
+      "label": "Product Design",
+      "weight": 2.0,
+      "keywords": [
+        "product design", "UI", "UX", "interaction design", "Figma",
+        "design system", "design token", "prototyping", "user research",
+        "wireframe", "Framer", "Webflow", "design lead", "design crit",
+        "portfolio", "case study", "design ops", "design engineer",
+        "Linear", "Notion", "Vercel", "Cron", "Arc browser", "Raycast",
+        "Origin UI", "Once UI", "Shadcn", "Tailwind", "Lottie"
+      ],
+      "sources_priority": ["reddit_design", "tiktok", "x", "sidebar", "youtube"],
+      "subreddits": ["ProductDesign", "UI_Design", "UXDesign", "FigmaDesign", "web_design"]
+    },
+    {
+      "id": "filmmaking",
+      "label": "Filmmaking",
+      "weight": 2.0,
+      "keywords": [
+        "filmmaking", "cinematography", "color grading", "DaVinci Resolve",
+        "Premiere", "Final Cut", "After Effects", "B-roll", "lighting",
+        "lens", "anamorphic", "Sony FX", "Canon R5", "BMPCC", "DJI",
+        "Ronin", "gimbal", "log footage", "LUT", "audio mix",
+        "short film", "vertical video", "phone filmmaking", "iPhone filmmaking",
+        "AI filmmaking", "Sora film", "Veo film", "vfx", "Blender", "Unreal"
+      ],
+      "sources_priority": ["tiktok", "youtube", "reddit_film", "x"],
+      "subreddits": ["Filmmakers", "cinematography", "VideoEditing", "premiere", "davinciresolve"]
+    },
+    {
+      "id": "tech",
+      "label": "Tech / Software / Devices",
+      "weight": 1.0,
+      "keywords": [
+        "Apple", "iPhone", "Vision Pro", "M5", "Pixel", "Samsung",
+        "Meta", "Quest", "AR glasses", "wearable", "Rabbit",
+        "Humane", "smart home", "Tesla", "Rivian", "EV",
+        "developer", "GitHub", "open source", "WWDC", "Google IO",
+        "startup launch", "Series A", "YC", "Vercel", "Supabase"
+      ],
+      "sources_priority": ["hackernews", "producthunt", "x", "youtube"],
+      "subreddits": ["technology", "gadgets", "apple", "Futurology", "startups"]
+    },
+    {
+      "id": "how_to",
+      "label": "How-To / Tutorials",
+      "weight": 1.0,
+      "keywords": [
+        "how to", "tutorial", "step by step", "build with", "automate",
+        "workflow", "productivity", "tools I use", "stack",
+        "shortcut", "tip", "trick", "hack", "lesson", "guide"
+      ],
+      "sources_priority": ["youtube", "tiktok", "google_trends", "reddit"],
+      "subreddits": ["productivity", "LifeProTips", "InternetIsBeautiful"]
+    },
+    {
+      "id": "lifestyle",
+      "label": "Lifestyle / Creator",
+      "weight": 1.0,
+      "keywords": [
+        "day in the life", "creator life", "remote work", "digital nomad",
+        "morning routine", "workspace", "desk setup", "minimalism",
+        "aesthetic", "vlog", "behind the scenes", "studio tour",
+        "creative process", "burnout", "creative block"
+      ],
+      "sources_priority": ["tiktok", "instagram", "youtube"],
+      "subreddits": ["malelifestyle", "WorkspacePorn", "DigitalNomad", "battlestations"]
+    },
+    {
+      "id": "business",
+      "label": "Business / Investments",
+      "weight": 1.0,
+      "keywords": [
+        "startup", "founder", "fundraise", "Series A", "Series B",
+        "IPO", "acquisition", "valuation", "VC", "venture",
+        "bootstrapping", "indie hacker", "solopreneur", "MRR",
+        "ARR", "PMF", "go-to-market", "creator economy",
+        "monetization", "passive income", "earnings", "Q1", "Q2"
+      ],
+      "sources_priority": ["x", "hackernews", "reddit_biz", "google_trends"],
+      "subreddits": ["Entrepreneur", "startups", "indiehackers", "smallbusiness"]
+    }
+  ],
+
+  "brand_safe_exclusions": {
+    "blocked_topics": [
+      "politics", "election", "partisan", "republican", "democrat",
+      "trump", "biden", "harris", "vance", "congress", "senate",
+      "alcohol", "beer", "wine", "vodka", "whiskey", "spirits",
+      "drug", "weed", "cannabis", "marijuana", "edibles", "psychedelic",
+      "gambling", "casino", "betting", "sportsbook", "lottery",
+      "OnlyFans", "adult content"
+    ],
+    "blocked_keywords_regex": [
+      "\\b(vote|voting|ballot|campaign)\\b",
+      "\\b(meme\\s*coin|shitcoin|pump\\s*and\\s*dump)\\b"
+    ],
+    "allowed_with_caveat": [
+      "crypto (only if tech/infrastructure angle, not price speculation)",
+      "investing (only if creator economy / startup, not stock picks)"
+    ]
+  },
+
+  "platform_priorities": ["tiktok", "youtube", "instagram", "x"],
+
+  "velocity_thresholds": {
+    "rising_min_growth_pct": 100,
+    "peaking_min_volume": 5000,
+    "fading_max_age_days": 5
+  },
+
+  "scoring_weights": {
+    "niche_fit": 0.40,
+    "velocity": 0.25,
+    "cross_platform": 0.15,
+    "recency": 0.10,
+    "originality": 0.10
+  }
+}
