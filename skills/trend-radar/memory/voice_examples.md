@@ -2,6 +2,8 @@
 
 Fill this file with your own voice before using the skill. The skill reads it before generating every brief. The more specific you are, the better the output matches how you actually write.
 
+**Until you set your own rules here, the skill defaults to sentence case with natural punctuation.** Your preferences in this file always override that default, so if you write in all lowercase, or never use em dashes, or lean on emoji, say so below and the skill will match it.
+
 ---
 
 ## Identity
@@ -24,8 +26,8 @@ Example:
 
 List the non-negotiable rules for how you write. Examples:
 
-1. **Casing**: lowercase everything except proper nouns and acronyms? Title case? Your call — write it here.
-2. **Punctuation**: no em dashes? No exclamation marks? Define it.
+1. **Casing**: sentence case (the default)? All lowercase? Title case? Your call, write it here.
+2. **Punctuation**: em dashes ok or banned? Exclamation marks? Define it.
 3. **Sentence rhythm**: short and punchy? Long and reflective? Fragments OK?
 4. **Emoji usage**: how many, where, which ones.
 

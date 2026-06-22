@@ -22,19 +22,21 @@ Running `python3 scripts/validate_setup.py` answers both in one shot.
 
 ### First-run welcome (show this before starting setup)
 
-The user has likely just installed the skill from the terminal and been dropped here with no instructions. Orient them warmly and in plain language before touching any config. Open with something close to this (keep it lowercase, no em dashes, adapt naturally, don't read it robotically):
+The user has likely just installed the skill from the terminal and been dropped here with no instructions. Orient them warmly and in plain language before touching any config. Use standard sentence casing in everything you say to the user (this is product-facing text, not the content voice). Open with something close to this (adapt naturally, don't read it robotically):
 
-> 👋 welcome to trend radar. you're all installed.
+> 👋 Welcome to Trend Radar. You're all installed.
 >
-> before i can pull trends for you, we do a quick one-time setup, about 10-15 minutes:
-> 1. connect notion (where your briefs get saved)
-> 2. tell me your content niches
-> 3. capture how you write, so the briefs sound like you
-> 4. a test run to confirm everything works
+> Before I can pull trends for you, we do a quick one-time setup, about 10-15 minutes:
+> 1. Connect Notion (where your briefs get saved)
+> 2. Tell me your content niches
+> 3. Capture how you write, so the briefs sound like you
+> 4. A test run to confirm everything works
 >
-> after this, you just say "what's trending today?" any morning and i'll do the rest. ready to start?
+> After this, you just say "what's trending today?" any morning and I'll do the rest. Ready to start?
 
-Then wait for them to confirm before diving into `references/setup_guide.md`. If they already gave a clear instruction (e.g. "set up notion"), acknowledge it and jump to the matching step instead of repeating the whole intro.
+Then wait for them to confirm before diving into `references/setup_guide.md`. If they already gave a clear instruction (e.g. "set up Notion"), acknowledge it and jump to the matching step instead of repeating the whole intro.
+
+**Casing rule for everything you say to the user:** all setup prompts, questions, status updates, and error messages you show the user use standard sentence casing. The all-lowercase style applies only to the *generated content* governed by the user's voice profile (hooks, scripts, captions), not to the skill talking to the user.
 
 **If configured** and the user wants trends (or this is the scheduled daily run):
 → skip setup, continue with "When invoked" below.
@@ -99,9 +101,9 @@ The python scripts resolve both automatically, so for fetch/score steps you just
    - Hashtag stack per platform (3-tier: big / mid / niche)
 
 8. **MANDATORY voice audit before any Notion write.** For every field of every brief (Trend, Hook Variants, Script, Shot List, Caption, Hashtags, page body content):
-   - Apply the voice rules from `memory/voice_examples.md`.
-   - Search for `—` (U+2014 em dash) and `–` (U+2013 en dash) in prose. Allow en dashes ONLY inside timestamp ranges like `0:00–0:03`; anywhere else, rewrite using a comma, period, line break, or two sentences.
-   - Search for AI-tell phrases: delve, dive into, elevate, harness, unlock, seamless, robust, transform your workflow, in today's fast-paced world, let's dive in, game-changing, revolutionary, embark on, navigate the landscape. Rewrite anything that hits.
+   - Apply the user's voice profile from `DATA_DIR/memory/voice_examples.md`. Casing and punctuation come from there. **If the user hasn't set a profile, default to sentence case with natural punctuation.** Do not impose a casing or punctuation style the profile didn't ask for.
+   - Honor any punctuation the profile bans. For example, only if the profile says "no em dashes" do you search for `—` (U+2014) and `–` (U+2013) and rewrite them (en dashes inside timestamp ranges like `0:00–0:03` are always fine).
+   - Search for AI-tell phrases (this applies to every voice): delve, dive into, elevate, harness, unlock, seamless, robust, transform your workflow, in today's fast-paced world, let's dive in, game-changing, revolutionary, embark on, navigate the landscape. Rewrite anything that hits.
    - Verify each caption ends with a question or engagement prompt.
    - Verify the 3 hook variants use 3 different archetypes, and at least one differs from any archetype used in the last 2 days per `memory/used_hooks.json`.
    - If any check fails, fix and re-audit. Do NOT push until clean.
@@ -119,19 +121,21 @@ The python scripts resolve both automatically, so for fetch/score steps you just
 
 ## Briefing format
 
-```
-🌅 trend radar, {day}, {date}
+The briefing is the skill talking to the user, so the chrome (header, labels) uses standard sentence casing. The quoted hook and trend framing stay in the user's content voice (lowercase by default), since those are generated content, not the skill's chrome.
 
-#1  {trend name} (score: {N}, {velocity emoji} {velocity label})
-    platforms: {list} · category: {niche} · time-to-stale: ~{N} days
-    hook: "{top hook variant}"
-    → full brief in notion
+```
+🌅 Trend Radar - {day}, {date}
+
+#1  {trend name} (Score: {N}, {velocity emoji} {velocity label})
+    Platforms: {list} · Category: {niche} · Time-to-stale: ~{N} days
+    Hook: "{top hook variant}"
+    → Full brief in Notion
 
 #2  ...
 
 #3  ...
 
-🗑  skipped {N} other trends (mostly {reason}).
+🗑  Skipped {N} other trends (mostly {reason}).
 ```
 
 ## Hard rules

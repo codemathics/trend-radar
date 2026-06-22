@@ -96,15 +96,16 @@ For each script, the engine populates:
 
 ## Voice rules
 
-**HARD RULES (non-negotiable):**
+Casing, punctuation, and emoji are **not** fixed by this skill. They come from the user's voice profile in `memory/voice_examples.md`, so the output sounds like the person using it, not like a preset. If their profile says all lowercase and no em dashes, do that. If it says sentence case with em dashes, do that instead.
 
-1. **Lowercase everything.** Captions, on-screen text, hashtags (`#productdesign`, not `#ProductDesign`), the chat briefing itself. Only exception: proper product names (Sora, Claude, Cursor, Figma) and acronyms (AI, LLM, UI, UX).
+**If the user hasn't set a voice profile yet, default to:**
+- **Sentence case** (capitalize the start of sentences and proper nouns/acronyms). This is the default everywhere.
+- Natural, normal punctuation (em dashes allowed unless the profile bans them).
+- No emoji unless the content clearly calls for it.
 
-2. **No em dashes.** Not in scripts, captions, hooks, shot lists, hashtags, the chat briefing. Anywhere. Em dashes scream "AI wrote this" and your content has to sound human. If a thought needs a pause, use a comma, a period, two sentences, or a line break. Never any long-dash glyph. Never `--` either.
+**The one rule that always applies, regardless of profile:** no AI-tell phrasing. Skip "delve into", "elevate", "navigate the landscape", "harness the power of", "transform your workflow", "in today's fast-paced world", "let's dive in", "unlock the potential", "robust solution", "seamless experience". This is about sounding human, which every voice wants.
 
-3. **No AI-tell phrasing.** Skip: "delve into", "elevate", "navigate the landscape", "harness the power of", "transform your workflow", "in today's fast-paced world", "let's dive in", "unlock the potential", "robust solution", "seamless experience". Write the way the creator would text a friend in the same space.
-
-Other voice defaults (to be refined once voice samples are captured):
+Other voice defaults (the profile overrides any of these):
 - First person, direct, slightly dry
 - No corporate-speak
 - One joke or sharp aside per 30s

@@ -6,6 +6,8 @@ get the user to a working daily trend briefing in one session. do as much automa
 
 be warm, plain, and specific. no jargon unless the user is clearly technical. when something will take a moment, say so.
 
+**casing: everything you say to the user uses standard sentence casing** (capital at the start of sentences, proper nouns capitalized: Notion, YouTube, Product Hunt, etc.). The example messages quoted below are written in that style on purpose, mirror it. The all-lowercase style is only for the generated content governed by the user's voice profile, never for the skill speaking to the user.
+
 ---
 
 ## before you start
@@ -22,7 +24,7 @@ be warm, plain, and specific. no jargon unless the user is clearly technical. wh
 
 **run the state check.** run `python3 <CODE_DIR>/scripts/validate_setup.py` and read the output. it prints the resolved data dir and tells you what's already done so you can skip those steps.
 
-tell the user what you found - something like "looks like python is ready and you've got notion connected. i just need to create the databases and set up your niches."
+tell the user what you found - something like "Looks like Python is ready and you've got Notion connected. I just need to create the databases and set up your niches."
 
 ---
 
@@ -53,31 +55,31 @@ before anything notion-related, check whether you have notion mcp tools availabl
 **if not connected:** paste this to the user word for word (adjust the formatting to chat):
 
 ---
-to connect notion to claude code, you need to do three things:
+To connect Notion to Claude Code, you need to do three things:
 
-**1. create a notion integration**
-- go to notion.so/my-integrations
-- click "new integration"
-- give it any name, e.g. "trend radar"
-- under capabilities, check: read content, update content, insert content
-- click save
-- copy the "internal integration token" (it starts with `secret_`)
+**1. Create a Notion integration**
+- Go to notion.so/my-integrations
+- Click "New integration"
+- Give it any name, e.g. "Trend Radar"
+- Under capabilities, check: Read content, Update content, Insert content
+- Click Save
+- Copy the "Internal Integration Token" (it starts with `secret_`)
 
-**2. add the notion mcp to claude code**
-- open claude code settings
-- go to MCP Servers
-- click Add Server
-- set command to: `npx -y @notionhq/notion-mcp-server`
-- add an environment variable:
+**2. Add the Notion MCP to Claude Code**
+- Open Claude Code settings
+- Go to MCP Servers
+- Click Add Server
+- Set command to: `npx -y @notionhq/notion-mcp-server`
+- Add an environment variable:
   - key: `OPENAPI_MCP_HEADERS`
   - value: `{"Authorization": "Bearer <paste your token here>", "Notion-Version": "2022-06-28"}`
-- save and restart claude code
+- Save and restart Claude Code
 
-**3. authorize your notion pages**
-- open notion and go to any page you want the tool to access
-- click the three-dot menu → Connections → connect to your integration
+**3. Authorize your Notion pages**
+- Open Notion and go to any page you want the tool to access
+- Click the three-dot menu → Connections → connect to your integration
 
-once you've done all three, come back and type `/trend-radar` and i'll pick up here.
+Once you've done all three, come back and type `/trend-radar` and I'll pick up here.
 
 ---
 
@@ -91,7 +93,7 @@ after they confirm, verify you can see notion tools. if still not available, ask
 
 you need to create two databases: trend radar and hook library.
 
-**find a parent page.** ask: "which notion page should i create the databases inside? paste the page url, or just say 'i'll create a new page' and i'll make one."
+**find a parent page.** ask: "Which Notion page should I create the databases inside? Paste the page URL, or just say 'create a new page' and I'll make one."
 
 use `notion-search` to find the page by url or name if they gave one. extract the page id. if they want a new page, create one with `notion-create-pages` first.
 
@@ -159,9 +161,9 @@ date:             Used Date
 }
 ```
 
-optionally ask: "what's your name and email in notion? i'll add it to the config." if they don't care, leave those fields empty.
+optionally ask: "What's your name and email in Notion? I'll add it to the config." if they don't care, leave those fields empty.
 
-tell the user: "created both databases in notion - you'll see them appear in your workspace now."
+tell the user: "Created both databases in Notion - you'll see them appear in your workspace now."
 
 ---
 
@@ -171,10 +173,10 @@ you're going to rewrite `<DATA_DIR>/memory/my_niches.json` with the user's actua
 
 ask these questions (can ask all at once):
 
-1. "what topics do you make content about? list as many as you want - they can be broad (ai, tech) or specific (figma tips, short film making)"
-2. "which one is your main niche - the one you post about most?"
-3. "where is most of your audience based? (e.g., US, UK, global)"
-4. "any topics you'd never want to post about, even if they're trending? (politics and gambling are already filtered by default)"
+1. "What topics do you make content about? List as many as you want - they can be broad (AI, tech) or specific (Figma tips, short film making)."
+2. "Which one is your main niche - the one you post about most?"
+3. "Where is most of your audience based? (e.g., US, UK, global)"
+4. "Any topics you'd never want to post about, even if they're trending? (Politics and gambling are already filtered by default.)"
 
 once you have their answers:
 - rewrite `memory/my_niches.json` with their real niches
@@ -185,7 +187,7 @@ once you have their answers:
 - set `region.primary` to their main region (e.g., "US")
 - add any extra blocked topics to `brand_safe_exclusions`
 
-show them a summary: "here's how i've set up your niches: [list them with weights]. does this look right?" adjust if they want to change anything.
+show them a summary: "Here's how I've set up your niches: [list them with weights]. Does this look right?" adjust if they want to change anything.
 
 ---
 
@@ -195,10 +197,10 @@ read the current `<DATA_DIR>/memory/voice_examples.md`. if it still looks like a
 
 ask:
 
-1. "paste 2-3 things you've actually written and posted - a caption, a thread, a description, whatever. exactly as you wrote it." (this is the most important input - their real writing samples)
-2. "any words or phrases you'd never use? add to the list."
-3. "do you write all lowercase, sentence case, or something else?"
-4. "do you use emoji? always, sometimes, or never? if sometimes, any specific ones?"
+1. "Paste 2-3 things you've actually written and posted - a caption, a thread, a description, whatever. Exactly as you wrote it." (this is the most important input - their real writing samples)
+2. "Any words or phrases you'd never use? Add them to the list."
+3. "Do you write all lowercase, sentence case, or something else?"
+4. "Do you use emoji? Always, sometimes, or never? If sometimes, any specific ones?"
 
 take their answers and rewrite `memory/voice_examples.md`:
 - put their real examples in the examples sections
@@ -206,17 +208,17 @@ take their answers and rewrite `memory/voice_examples.md`:
 - note their casing preference
 - document emoji habits
 
-if they don't have examples handy, tell them it's optional: "you can add your real examples later - the skill will still work, it just might not sound exactly like you yet."
+if they don't have examples handy, tell them it's optional: "You can add your real examples later - the skill will still work, it just might not sound exactly like you yet."
 
 ---
 
 ### step 6 - api keys (optional)
 
-say: "two optional api keys give you better coverage - youtube data api and product hunt. want to add them now? you can always skip this and add them later."
+say: "Two optional API keys give you better coverage - YouTube Data API and Product Hunt. Want to add them now? You can always skip this and add them later."
 
 if they want to:
-- youtube: "go to console.cloud.google.com - APIs & Services - YouTube Data API v3 - Create credentials - API Key. paste it here."
-- product hunt: "go to api.producthunt.com/v2/docs, create a developer app, and get your api token."
+- youtube: "Go to console.cloud.google.com - APIs & Services - YouTube Data API v3 - Create credentials - API Key. Paste it here."
+- product hunt: "Go to api.producthunt.com/v2/docs, create a developer app, and get your API token."
 
 write `<DATA_DIR>/memory/secrets.json`:
 ```json
@@ -246,7 +248,7 @@ show them the output summary - roughly how many candidates came in from each sou
 
 ### step 8 - schedule (optional)
 
-say: "last thing - want to set up the automatic morning run? it fetches at 5:30am and you get briefs at 6am."
+say: "Last thing - want to set up the automatic morning run? It fetches at 5:30am and you get briefs at 6am."
 
 if yes:
 - tell them to add this to their crontab (`crontab -e`), substituting the real absolute CODE_DIR path:
@@ -264,16 +266,16 @@ if no: skip. don't mention it again.
 
 tell the user:
 
-"you're set up. here's the quick reference:
+"You're set up. Here's the quick reference:
 
-**daily (if scheduled):** 5:30am python fetches, 6am claude generates 3 briefs to notion - no action needed from you
+**Daily (if scheduled):** 5:30am Python fetches, 6am Claude generates 3 briefs to Notion - no action needed from you.
 
-**on demand:** just say 'what's trending today?' in claude code and i'll run the radar
+**On demand:** just say 'what's trending today?' in Claude Code and I'll run the radar.
 
-**to adjust later:**
-- change what topics you cover: edit `memory/my_niches.json`
-- update how you sound: edit `memory/voice_examples.md`
-- block a topic: add it to `brand_safe_exclusions` in `my_niches.json`"
+**To adjust later:**
+- Change what topics you cover: edit `memory/my_niches.json`
+- Update how you sound: edit `memory/voice_examples.md`
+- Block a topic: add it to `brand_safe_exclusions` in `my_niches.json`"
 
 ---
 
@@ -281,5 +283,5 @@ tell the user:
 
 if a step fails and you can't fix it automatically:
 - be specific: say exactly what failed and exactly what the user needs to do, with the exact command or url
-- tell them which step to return to: "once you've done that, type /trend-radar and i'll start from step [N]"
+- tell them which step to return to: "Once you've done that, type /trend-radar and I'll start from step [N]."
 - never leave them without a clear next action

@@ -4,6 +4,8 @@ The first 3 seconds are everything. Every brief gets 3 hook variants drawn from 
 
 Hooks are tagged by archetype + niche affinity. When generating, the engine picks the archetype best matched to the trend AND least recently used.
 
+> The example hooks below are written in one creator's lowercase voice to illustrate each archetype's *structure*. Casing follows the user's voice profile (`memory/voice_examples.md`); the default when no profile is set is sentence case. Copy the shape of these hooks, not their casing.
+
 ---
 
 ## Archetype 1: Pattern Interrupt

@@ -9,23 +9,22 @@ This is the exact structure every brief should produce. The skill generates one 
 
 The duplication is on purpose, so the table view is informative AND the page reads as one continuous brief.
 
-**Voice rules (non-negotiable):**
-1. **Lowercase** except proper product names (Sora, Claude, Cursor, Figma) and acronyms (AI, LLM, UI, UX).
-2. **No em dashes** anywhere. Use commas, periods, or line breaks. Em dashes are the AI tell.
-3. **No AI-tell phrasing.** Skip "delve into", "elevate", "harness", "unlock", "seamless", "robust", "in today's fast-paced world", "let's dive in".
+**Voice rules:**
 
-The skill must self-audit every brief for em dashes and tell-words before writing to Notion. Strip them, rewrite the sentence, push.
+Casing and punctuation come from the user's voice profile (`memory/voice_examples.md`), not from this template. Follow whatever the profile specifies. **If no profile is set, default to sentence case with natural punctuation.** The examples below are written in one creator's lowercase voice purely to show structure, match the user's profile, not the casing of these samples.
+
+The one rule that always applies regardless of profile: **no AI-tell phrasing** ("delve into", "elevate", "harness", "unlock", "seamless", "robust", "in today's fast-paced world", "let's dive in"). The skill self-audits every brief for tell-words before writing to Notion, and for any punctuation the user's profile bans (e.g. em dashes, if they asked for none). Strip them, rewrite the sentence, push.
 
 ---
 
 ## Field-by-field spec
 
 ### 1. Trend (title), TITLE
-One sharp line, lowercase. ~6–10 words. Frame it like a hook itself.
+One sharp line in the user's voice. ~6–10 words. Frame it like a hook itself.
 
-**Example:** `agents are starting to use your computer for you`
+**Example (sentence-case default):** `Agents are starting to use your computer for you`
 
-(notice: no em dash, all lowercase, sounds like a thought you'd say out loud.)
+(The casing follows the user's profile, this example uses the sentence-case default. It should sound like a thought you'd say out loud.)
 
 ### 2. Hook Variants (RICH_TEXT)
 Exactly 3 hooks, each from a DIFFERENT archetype, ranked best to worst.
@@ -80,7 +79,7 @@ A direct link to a TikTok sound (or IG sound) that's currently trending in this 
 If no audio fits, leave empty and write a 1-line audio direction in the Caption field instead.
 
 ### 6. Caption, RICH_TEXT
-Per-platform variants. All lowercase.
+Per-platform variants, in the user's voice (casing per their profile; sentence case by default).
 
 **Format:**
 ```
@@ -136,6 +135,6 @@ A brief is shippable if you can read it, walk to your desk, and start filming in
 - Re-write any hook
 - Figure out what each shot means
 - Look up the trending sound
-- Translate it into his voice (it's already in his voice)
+- Translate it into their voice (it's already in their voice)
 
 If any of those is required, the brief failed.
