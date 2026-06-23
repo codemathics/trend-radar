@@ -137,23 +137,35 @@ def _fetch_sounds(region: str) -> list[TrendCandidate]:
     return out
 
 
-def _api_available(region: str) -> bool:
+def _api_gated(region: str) -> bool | None:
     """Probe the Creative Center API once.
 
     TikTok now permission-gates these endpoints for unsigned requests (the
     hashtag endpoint returns code 40101 "no permission" and the sounds path
     404s). Replicating TikTok's request signing is a moving target that breaks
-    often, so rather than fail per-region we probe once and, when the API isn't
-    serving us, defer TikTok trends to the Tier-2 browser fallback (the skill
-    loads Creative Center in a real browser session when fewer than 3 trends
-    qualify). If TikTok ever un-gates the API, this probe passes and the normal
-    path resumes with no code change.
+    often, so rather than fail per-region we probe once and, when the API is
+    gated, defer TikTok trends to the Tier-2 browser fallback (the skill loads
+    Creative Center in a real browser session when fewer than 3 trends qualify).
+
+    Tri-state so a transient blip doesn't masquerade as a permanent gate:
+      True  — permission-gated (code 40101 / "no permission"); defer to Tier 2.
+      False — serving us (code 0); run the normal pulls.
+      None  — inconclusive (timeout, transient error, unexpected code); fall
+              through to the normal per-region pulls, which each fail soft,
+              rather than suppressing all of TikTok on a one-off hiccup.
     """
     data = _get(
         HASHTAG_URL,
         {"page": 1, "limit": 1, "period": 7, "country_code": region, "sort_by": "popular"},
     )
-    return bool(data) and data.get("code") == 0
+    if not data:
+        return None
+    code = data.get("code")
+    if code == 0:
+        return False
+    if code == 40101 or str(data.get("msg", "")).lower() == "no permission":
+        return True
+    return None
 
 
 def fetch() -> list[TrendCandidate]:
@@ -163,12 +175,14 @@ def fetch() -> list[TrendCandidate]:
     secondary = region_cfg.get("secondary", ["GB", "CA", "AU"])
     regions = [primary] + [r for r in secondary if r != primary] if primary else DEFAULT_REGIONS
 
-    if not _api_available(regions[0]):
+    if _api_gated(regions[0]) is True:
         log.info(
             "TikTok Creative Center API is gated for unsigned requests; "
             "deferring TikTok trends to the browser fallback (Tier 2)"
         )
         return []
+    # False (serving us) or None (transient/unknown) → attempt the normal pulls;
+    # each per-region call already returns [] on failure.
 
     all_items: list[TrendCandidate] = []
     for region in regions:
