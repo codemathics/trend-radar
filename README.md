@@ -113,6 +113,7 @@ everything lands in notion as both table properties (so your database view is fi
 optional (improves results but not required):
 - youtube data api v3 key
 - product hunt developer token
+- reddit script-app credentials (client id + secret)
 
 ---
 
@@ -286,17 +287,20 @@ edit `memory/secrets.json`:
 ```json
 {
   "YT_API_KEY": "AIza...",
-  "PH_TOKEN": "your-product-hunt-token"
+  "PH_TOKEN": "your-product-hunt-token",
+  "REDDIT_CLIENT_ID": "your-reddit-script-app-id",
+  "REDDIT_CLIENT_SECRET": "your-reddit-script-app-secret"
 }
 ```
 
 `secrets.json` is gitignored.
 
-**without keys:** hackernews, reddit, tiktok creative center all work with zero auth. you still get solid coverage.
+**without keys:** hackernews works with zero auth. reddit now requires a free script-app oauth (reddit blocks unauthenticated `.json` access), and tiktok's creative center api is permission-gated, so the tiktok fetcher defers to the tier-2 browser fallback. you still get hackernews plus whatever keys you add, and tier 2 fills the gaps.
 
 **with keys:**
 - `YT_API_KEY`: enables the youtube data api v3 fetcher. get one at [console.cloud.google.com](https://console.cloud.google.com) under apis & services, youtube data api v3.
 - `PH_TOKEN`: enables the product hunt fetcher. get one at [api.producthunt.com/v2/docs](https://api.producthunt.com/v2/docs).
+- `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET`: enables the reddit fetcher via app-only oauth. create a free "script" app at [reddit.com/prefs/apps](https://www.reddit.com/prefs/apps).
 
 you can also pass keys as environment variables. the skill checks `os.environ` before `secrets.json`.
 
