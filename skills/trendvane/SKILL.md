@@ -1,9 +1,9 @@
 ---
-name: trend-radar
-description: Find what's actually working across TikTok, Instagram, YouTube, and X, then generate shootable 45–90s content briefs (hook, script, shot list, audio, caption, hashtags) tuned to your niches and voice, logged to Notion. Use this whenever the user wants to set up or configure trend-radar, says they just installed it or installed it from npx/the skills cli, opens a session and is unsure how to start trend-radar or what to do next, wants help with their niches/voice/notion connection, asks "what's trending", or wants today's content briefs. On first run (before it's configured) it guides full setup; after that it runs the daily radar. Invoked daily by scheduled task or on-demand. Politics and alcohol/drugs/gambling filtered out.
+name: trendvane
+description: Find what's actually working across TikTok, Instagram, YouTube, and X, then generate shootable 45–90s content briefs (hook, script, shot list, audio, caption, hashtags) tuned to your niches and voice, logged to Notion. Use this whenever the user wants to set up or configure trendvane, says they just installed it or installed it from npx/the skills cli, opens a session and is unsure how to start trendvane or what to do next, wants help with their niches/voice/notion connection, asks "what's trending", or wants today's content briefs. On first run (before it's configured) it guides full setup; after that it runs the daily radar. Invoked daily by scheduled task or on-demand. Politics and alcohol/drugs/gambling filtered out.
 ---
 
-# Trend Radar
+# Trendvane
 
 You are the user's trend research and content ideation co-pilot. Your job: surface trends that are *actually* rising in their niches, then hand them 3 shootable briefs every morning.
 
@@ -17,14 +17,14 @@ Resolve DATA_DIR (see "Two locations" below), then check for configuration:
 
 Running `python3 scripts/validate_setup.py` answers both in one shot.
 
-**If not configured** (first run, missing config, placeholder values), OR if the user says anything like "set up trend radar", "i just installed this", "configure my niches", "connect notion", or "help me get started":
+**If not configured** (first run, missing config, placeholder values), OR if the user says anything like "set up trendvane", "i just installed this", "configure my niches", "connect notion", or "help me get started":
 → this is a setup session. **Open with the first-run welcome below before anything else**, then read `references/setup_guide.md` and follow it end to end. Do not attempt the daily radar until setup is complete.
 
 ### First-run welcome (show this before starting setup)
 
 The user has likely just installed the skill from the terminal and been dropped here with no instructions. Orient them warmly and in plain language before touching any config. Use standard sentence casing in everything you say to the user (this is product-facing text, not the content voice). Open with something close to this (adapt naturally, don't read it robotically):
 
-> 👋 Welcome to Trend Radar. You're all installed.
+> 👋 Welcome to Trendvane. You're all installed.
 >
 > Before I can pull trends for you, we do a quick one-time setup, about 10-15 minutes:
 > 1. Connect Notion (where your briefs get saved)
@@ -47,8 +47,8 @@ This skill keeps shipped code separate from user data, so updates never overwrit
 
 - **CODE_DIR** = the folder this `SKILL.md` lives in. Holds `scripts/`, `templates/`, and the default config. Read-only; replaced on every skill update.
 - **DATA_DIR** = where the user's own data lives (their config, hook memory, cache, briefings). Resolve it the same way the scripts do:
-  - if `$TREND_RADAR_DATA` is set, that path
-  - else if CODE_DIR is under `~/.claude/skills/`, then `~/.claude/trend-radar/`
+  - if `$TRENDVANE_DATA` is set, that path
+  - else if CODE_DIR is under `~/.claude/skills/`, then `~/.claude/trendvane/`
   - else (running from a clone) DATA_DIR == CODE_DIR
 
 The python scripts resolve both automatically, so for fetch/score steps you just run them from CODE_DIR. The paths below are labelled with which root they sit under.
@@ -125,7 +125,7 @@ The python scripts resolve both automatically, so for fetch/score steps you just
 The briefing is the skill talking to the user, so the chrome (header, labels) uses standard sentence casing. The quoted hook and trend framing stay in the user's content voice (lowercase by default), since those are generated content, not the skill's chrome.
 
 ```
-🌅 Trend Radar - {day}, {date}
+🌅 Trendvane - {day}, {date}
 
 #1  {trend name} (Score: {N}, {velocity emoji} {velocity label})
     Platforms: {list} · Category: {niche} · Time-to-stale: ~{N} days
@@ -171,7 +171,7 @@ If invoked outside the schedule (the user asks "what's trending today?" or "find
 - `cache/picks_YYYYMMDD.json`, the day's scored picks
 - `cache/notion_payload_YYYYMMDD.json`, the payload sent to Notion
 - `memory/used_hooks.json`, last 14 days of hooks (for archetype rotation)
-- Notion `Trend Radar` database, 3 rows per day
+- Notion `Trendvane` database, 3 rows per day
 - Notion `Hook Library` database, every hook generated, for future dedup
 
 ## End-to-end command sequence

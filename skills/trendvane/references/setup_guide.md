@@ -1,6 +1,6 @@
-# trend radar setup guide
+# trendvane setup guide
 
-this is the first-run onboarding flow. follow it when the main skill detects that trend-radar isn't configured yet (no `notion_config.json`, or `my_niches.json` still has placeholder values), or when the user explicitly asks to set up / reconfigure.
+this is the first-run onboarding flow. follow it when the main skill detects that trendvane isn't configured yet (no `notion_config.json`, or `my_niches.json` still has placeholder values), or when the user explicitly asks to set up / reconfigure.
 
 get the user to a working daily trend briefing in one session. do as much automatically as possible - create databases, write config files, run commands. only ask the user for things you genuinely cannot figure out yourself (their content topics, their voice, their notion workspace).
 
@@ -16,8 +16,8 @@ be warm, plain, and specific. no jargon unless the user is clearly technical. wh
 
 - **CODE_DIR** = where this skill is installed (the folder its `SKILL.md` lives in). holds `scripts/`, `templates/`, `references/`, and the default config. confirm with `ls <CODE_DIR>/scripts/run_all.py`.
 - **DATA_DIR** = where the user's config and data live, so updates can't wipe them. resolve it the way the scripts do:
-  - if `$TREND_RADAR_DATA` is set, that path
-  - else if CODE_DIR is under `~/.claude/skills/`, then `~/.claude/trend-radar/`
+  - if `$TRENDVANE_DATA` is set, that path
+  - else if CODE_DIR is under `~/.claude/skills/`, then `~/.claude/trendvane/`
   - else (running from a clone) DATA_DIR == CODE_DIR
 
   create it if missing, with subfolders `memory/`, `cache/`, `briefings/`.
@@ -60,7 +60,7 @@ To connect Notion to Claude Code, you need to do three things:
 **1. Create a Notion integration**
 - Go to notion.so/my-integrations
 - Click "New integration"
-- Give it any name, e.g. "Trend Radar"
+- Give it any name, e.g. "Trendvane"
 - Under capabilities, check: Read content, Update content, Insert content
 - Click Save
 - Copy the "Internal Integration Token" (it starts with `secret_`)
@@ -79,7 +79,7 @@ To connect Notion to Claude Code, you need to do three things:
 - Open Notion and go to any page you want the tool to access
 - Click the three-dot menu → Connections → connect to your integration
 
-Once you've done all three, come back and type `/trend-radar` and I'll pick up here.
+Once you've done all three, come back and type `/trendvane` and I'll pick up here.
 
 ---
 
@@ -91,13 +91,13 @@ after they confirm, verify you can see notion tools. if still not available, ask
 
 ### step 3 - create notion databases
 
-you need to create two databases: trend radar and hook library.
+you need to create two databases: trendvane and hook library.
 
 **find a parent page.** ask: "Which Notion page should I create the databases inside? Paste the page URL, or just say 'create a new page' and I'll make one."
 
 use `notion-search` to find the page by url or name if they gave one. extract the page id. if they want a new page, create one with `notion-create-pages` first.
 
-**create the trend radar database.** use `notion-create-database` with the parent page id and these exact properties:
+**create the trendvane database.** use `notion-create-database` with the parent page id and these exact properties:
 
 ```
 title property:        Trend         (type: title)
@@ -146,7 +146,7 @@ date:             Used Date
   },
   "databases": {
     "trend_radar": {
-      "title": "trend radar",
+      "title": "trendvane",
       "url": "<url from api response>",
       "data_source_id": "<id from api response>",
       "data_source_url": "collection://<id from api response>"
@@ -253,9 +253,9 @@ say: "Last thing - want to set up the automatic morning run? It fetches at 5:30a
 if yes:
 - tell them to add this to their crontab (`crontab -e`), substituting the real absolute CODE_DIR path:
   ```
-  30 5 * * * cd <CODE_DIR> && python3 scripts/run_all.py >> ~/.claude/trend-radar/cache/run.log 2>&1
+  30 5 * * * cd <CODE_DIR> && python3 scripts/run_all.py >> ~/.claude/trendvane/cache/run.log 2>&1
   ```
-  (the scripts resolve the data dir on their own, so cache and briefings still land in `~/.claude/trend-radar/`.)
+  (the scripts resolve the data dir on their own, so cache and briefings still land in `~/.claude/trendvane/`.)
 - for the claude brief at 6am: offer to use `/schedule` to set it up if the user is in a session that supports it
 
 if no: skip. don't mention it again.
@@ -283,5 +283,5 @@ tell the user:
 
 if a step fails and you can't fix it automatically:
 - be specific: say exactly what failed and exactly what the user needs to do, with the exact command or url
-- tell them which step to return to: "Once you've done that, type /trend-radar and I'll start from step [N]."
+- tell them which step to return to: "Once you've done that, type /trendvane and I'll start from step [N]."
 - never leave them without a clear next action

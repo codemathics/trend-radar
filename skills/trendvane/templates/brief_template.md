@@ -1,6 +1,6 @@
 # Content Brief, Template
 
-This is the exact structure every brief should produce. The skill generates one of these per pick, then push_to_notion.py writes the fields into the Trend Radar database.
+This is the exact structure every brief should produce. The skill generates one of these per pick, then push_to_notion.py writes the fields into the Trendvane database.
 
 **Layout rule (fill everything, both places):**
 - Properties (table view): Trend, Date Spotted, Platforms, Category, Velocity, Score, Time-to-stale, Status, Trending Audio, Hook Variants, Script, Shot List, Caption, Hashtags, Source URLs, Reference Clips, My Take. Every text property gets filled.

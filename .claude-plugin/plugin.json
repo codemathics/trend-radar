@@ -1,15 +1,15 @@
 {
-  "name": "trend-radar",
+  "name": "trendvane",
   "description": "daily trend research and content brief generator for creators. fetches from hackernews, reddit, tiktok, youtube, product hunt, and google trends, scores by niche fit, and drops 3 shootable video briefs into notion every morning. on first run it guides you through full setup.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "skills": [
     {
-      "name": "trend-radar",
-      "path": "../skills/trend-radar/SKILL.md"
+      "name": "trendvane",
+      "path": "../skills/trendvane/SKILL.md"
     }
   ],
   "setup": {
-    "first_run": "/trend-radar",
-    "instructions": "install with `npx skills add codemathics/trend-radar -g -a claude-code`, then type /trend-radar in claude code. on the first run it guides you through setup (notion, niches, voice, test run); after that it runs the daily radar."
+    "first_run": "/trendvane",
+    "instructions": "install with `npx skills add codemathics/trendvane -g -a claude-code`, then type /trendvane in claude code. on the first run it guides you through setup (notion, niches, voice, test run); after that it runs the daily radar."
   }
 }

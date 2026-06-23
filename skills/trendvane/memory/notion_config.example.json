@@ -6,16 +6,16 @@
     "user_id": "your-notion-user-id"
   },
   "parent_page": {
-    "title": "Trend Radar",
+    "title": "Trendvane",
     "url": "https://www.notion.so/your-parent-page-url",
     "id": "your-parent-page-id"
   },
   "databases": {
     "trend_radar": {
-      "title": "Trend Radar",
-      "url": "https://www.notion.so/your-trend-radar-db-url",
-      "data_source_id": "your-trend-radar-data-source-id",
-      "data_source_url": "collection://your-trend-radar-data-source-id"
+      "title": "Trendvane",
+      "url": "https://www.notion.so/your-trendvane-db-url",
+      "data_source_id": "your-trendvane-data-source-id",
+      "data_source_url": "collection://your-trendvane-data-source-id"
     },
     "hook_library": {
       "title": "Hook Library",

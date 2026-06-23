@@ -1,4 +1,4 @@
-# Hook Patterns, Trend Radar
+# Hook Patterns, Trendvane
 
 The first 3 seconds are everything. Every brief gets 3 hook variants drawn from these archetypes. The skill rotates archetypes so we don't burn the same pattern twice in a week.
 

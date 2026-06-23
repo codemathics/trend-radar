@@ -1,4 +1,4 @@
-# trend radar - claude code skill
+# trendvane - claude code skill
 
 a claude code skill that runs every morning, fetches what's actually trending across hackernews, reddit, tiktok, youtube, product hunt, and google trends, scores each trend against your content niches, and drops 3 shootable video briefs into a notion database, complete with hooks, timestamped scripts, shot lists, captions, and hashtag stacks.
 
@@ -11,27 +11,27 @@ built to be cloned and configured for any creator. all the personalization lives
 install with one command:
 
 ```bash
-npx skills add codemathics/trend-radar -g -a claude-code
+npx skills add codemathics/trendvane -g -a claude-code
 ```
 
 **when the installer says `Done!`, here's what to do next:**
 
 1. open claude code (the app, or run `claude` in your terminal)
-2. type `/trend-radar` and hit enter
+2. type `/trendvane` and hit enter
 3. the skill greets you and walks you through a one-time setup, about 10-15 minutes: python deps, notion connection, database creation, your niches, your voice, and a test run
 
-that's it. the install only copies the skill onto your machine, so the terminal won't tell you to do this - the real start is typing `/trend-radar` inside claude code. every run after the first goes straight to generating your daily briefs (just ask "what's trending today?").
+that's it. the install only copies the skill onto your machine, so the terminal won't tell you to do this - the real start is typing `/trendvane` inside claude code. every run after the first goes straight to generating your daily briefs (just ask "what's trending today?").
 
 works for both technical and non-technical users.
 
-`npx skills add` uses the open [skills](https://github.com/vercel-labs/skills) cli, which installs the skill files into `~/.claude/skills/`. your own config and data live separately in `~/.claude/trend-radar/`, so running `npx skills update` later never overwrites them.
+`npx skills add` uses the open [skills](https://github.com/vercel-labs/skills) cli, which installs the skill files into `~/.claude/skills/`. your own config and data live separately in `~/.claude/trendvane/`, so running `npx skills update` later never overwrites them.
 
 **prefer to clone instead?**
 
 ```bash
-git clone https://github.com/codemathics/trend-radar.git
-cd trend-radar
-python3 setup.py      # installs deps + the skill, then run /trend-radar
+git clone https://github.com/codemathics/trendvane.git
+cd trendvane
+python3 setup.py      # installs deps + the skill, then run /trendvane
 ```
 
 ---
@@ -108,7 +108,7 @@ everything lands in notion as both table properties (so your database view is fi
 - **claude code:** [claude.ai/code](https://claude.ai/code) or the cli (`npm install -g @anthropic-ai/claude-code`)
 - **notion mcp** configured in your claude code setup (see [step 5](#5-set-up-notion))
 - **python 3.10+**
-- a notion workspace with two databases: `trend radar` and `hook library` (templates below)
+- a notion workspace with two databases: `trendvane` and `hook library` (templates below)
 
 optional (improves results but not required):
 - youtube data api v3 key
@@ -118,13 +118,13 @@ optional (improves results but not required):
 
 ## manual setup (advanced)
 
-if you prefer to set everything up yourself without the guided flow, here are the full steps. most users should use `npx skills add codemathics/trend-radar -g -a claude-code` (or `python3 setup.py` from a clone) then `/trend-radar` instead.
+if you prefer to set everything up yourself without the guided flow, here are the full steps. most users should use `npx skills add codemathics/trendvane -g -a claude-code` (or `python3 setup.py` from a clone) then `/trendvane` instead.
 
 ### 1. clone the repo
 
 ```bash
-git clone https://github.com/codemathics/trend-radar.git
-cd trend-radar
+git clone https://github.com/codemathics/trendvane.git
+cd trendvane
 ```
 
 ### 2. install python dependencies
@@ -199,7 +199,7 @@ claude reads this file before generating every brief and audits every line again
 
 you need two databases in notion before the skill can write anything.
 
-**create the trend radar database** with these properties:
+**create the trendvane database** with these properties:
 
 | property name | type |
 |---|---|
@@ -250,16 +250,16 @@ edit `memory/notion_config.json` with your workspace details:
     "user_id": "your-notion-user-id"
   },
   "parent_page": {
-    "title": "trend radar",
+    "title": "trendvane",
     "url": "https://www.notion.so/your-parent-page-url",
     "id": "your-parent-page-id"
   },
   "databases": {
     "trend_radar": {
-      "title": "trend radar",
-      "url": "https://www.notion.so/your-trend-radar-db-url",
-      "data_source_id": "your-trend-radar-data-source-id",
-      "data_source_url": "collection://your-trend-radar-data-source-id"
+      "title": "trendvane",
+      "url": "https://www.notion.so/your-trendvane-db-url",
+      "data_source_id": "your-trendvane-data-source-id",
+      "data_source_url": "collection://your-trendvane-data-source-id"
     },
     "hook_library": {
       "title": "hook library",
@@ -305,7 +305,7 @@ you can also pass keys as environment variables. the skill checks `os.environ` b
 the easiest path is the [skills](https://github.com/vercel-labs/skills) cli, which copies the skill folder into place for you:
 
 ```bash
-npx skills add codemathics/trend-radar -g -a claude-code
+npx skills add codemathics/trendvane -g -a claude-code
 ```
 
 or from a clone, `python3 setup.py` does the same and also installs python deps.
@@ -313,10 +313,10 @@ or from a clone, `python3 setup.py` does the same and also installs python deps.
 to install by hand, copy the skill folder into your claude code skills directory:
 
 ```bash
-cp -r skills/trend-radar ~/.claude/skills/trend-radar
+cp -r skills/trendvane ~/.claude/skills/trendvane
 ```
 
-the skill is then available in claude code. run `/trend-radar` - the first run finishes configuration (notion, niches, voice), and every run after that generates your daily briefs. you can also invoke it on a schedule (see below).
+the skill is then available in claude code. run `/trendvane` - the first run finishes configuration (notion, niches, voice), and every run after that generates your daily briefs. you can also invoke it on a schedule (see below).
 
 ---
 
@@ -331,10 +331,10 @@ the intended workflow is a 5:30am python fetch followed by a 6:00am claude brief
 ```bash
 # example cron entry, runs at 5:30am every day
 # point it at the installed skill folder; the script resolves the data dir itself
-30 5 * * * cd ~/.claude/skills/trend-radar && python3 scripts/run_all.py
+30 5 * * * cd ~/.claude/skills/trendvane && python3 scripts/run_all.py
 ```
 
-**step 2: schedule the claude skill** using claude code's `/schedule` command or the built-in scheduled tasks feature. set it to run at 6:00am and invoke the trend-radar skill.
+**step 2: schedule the claude skill** using claude code's `/schedule` command or the built-in scheduled tasks feature. set it to run at 6:00am and invoke the trendvane skill.
 
 claude picks up the picks file from step 1, generates the briefs, and pushes to notion.
 
@@ -346,7 +346,7 @@ you can ask for briefs at any time inside a claude code session:
 
 > "find me a trend on ai agents"
 
-> "run trend radar for filmmaking only"
+> "run trendvane for filmmaking only"
 
 claude skips the schedule formatting, applies any topic constraint you give it, and still pushes to notion unless you tell it not to.
 
@@ -363,7 +363,7 @@ python3 scripts/run_all.py --score
 after a successful run, claude posts a briefing in chat:
 
 ```
-trend radar, thursday, may 29
+trendvane, thursday, may 29
 
 #1  cursor's agent mode is shipping real code now (score: 84, rising)
     platforms: hackernews, reddit - category: ai - time-to-stale: < 3 days
@@ -452,17 +452,17 @@ every brief gets 3 variants from 3 different archetypes.
 
 the repo splits into shipped skill code and (at runtime) the user's own data dir.
 
-**in the repo / installed skill folder** (`~/.claude/skills/trend-radar/` after install):
+**in the repo / installed skill folder** (`~/.claude/skills/trendvane/` after install):
 
 ```
-trend-radar/
+trendvane/
 ├── README.md
 ├── setup.py                          # git-clone installer (deps + skills + data dir)
 ├── requirements.txt
 ├── .claude-plugin/
 │   └── plugin.json                   # plugin manifest (skills + first-run hint)
 └── skills/
-    └── trend-radar/                  # the skill (installed by the cli)
+    └── trendvane/                  # the skill (installed by the cli)
         ├── SKILL.md                  # daily workflow + first-run setup routing
         ├── requirements.txt          # deps travel with the skill
         ├── references/
@@ -486,10 +486,10 @@ trend-radar/
             └── used_hooks.json
 ```
 
-**user data dir** (`~/.claude/trend-radar/`, created on setup, never touched by updates):
+**user data dir** (`~/.claude/trendvane/`, created on setup, never touched by updates):
 
 ```
-~/.claude/trend-radar/
+~/.claude/trendvane/
 ├── memory/
 │   ├── my_niches.json                # your niches, weights, keywords, filters
 │   ├── voice_examples.md             # your voice profile
@@ -504,7 +504,7 @@ trend-radar/
     └── YYYY-MM-DD.md                 # daily brief archive
 ```
 
-> when run from a clone (without installing into `~/.claude/skills/`), the data dir collapses back into the repo folder so everything stays in one place for development. set `TREND_RADAR_DATA` to override the data location explicitly.
+> when run from a clone (without installing into `~/.claude/skills/`), the data dir collapses back into the repo folder so everything stays in one place for development. set `TRENDVANE_DATA` to override the data location explicitly.
 
 ---
 

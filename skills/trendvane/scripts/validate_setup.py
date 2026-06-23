@@ -1,4 +1,4 @@
-"""validate_setup.py - run this before your first trend radar run.
+"""validate_setup.py - run this before your first trendvane run.
 
 checks that all required config files exist and are filled in, python deps
 are installed, and notion config has the expected keys.

@@ -1,4 +1,4 @@
-"""Shared utilities for trend-radar fetchers.
+"""Shared utilities for trendvane fetchers.
 
 Every fetcher returns a list of normalized trend candidates with this shape:
 
@@ -36,7 +36,7 @@ from typing import Any, Iterable
 #
 #   CODE_ROOT  - where the skill's shipped files live (scripts, templates, and
 #                the template/default config). When installed via the skills
-#                CLI this is inside ~/.claude/skills/trend-radar and gets
+#                CLI this is inside ~/.claude/skills/trendvane and gets
 #                REPLACED on every `skills update`. Treat it as read-only.
 #
 #   DATA_ROOT  - where the user's own data lives: their filled-in config, the
@@ -54,12 +54,13 @@ def _resolve_data_root() -> Path:
     """Pick where user data (config, cache, briefings) lives.
 
     Priority:
-      1. TREND_RADAR_DATA env var, if set (cron / power users).
+      1. TRENDVANE_DATA env var, if set (cron / power users). The legacy
+         TREND_RADAR_DATA name is still honored as a fallback.
       2. If the skill is installed under ~/.claude/skills, use the stable
-         ~/.claude/trend-radar data dir so `skills update` can't wipe config.
+         ~/.claude/trendvane data dir so `skills update` can't wipe config.
       3. Otherwise (running from a clone), use the repo folder in place.
     """
-    env_dir = os.environ.get("TREND_RADAR_DATA")
+    env_dir = os.environ.get("TRENDVANE_DATA") or os.environ.get("TREND_RADAR_DATA")
     if env_dir:
         return Path(env_dir).expanduser()
 
@@ -69,9 +70,16 @@ def _resolve_data_root() -> Path:
     skills_home = claude_home / "skills"
     try:
         CODE_ROOT.relative_to(skills_home)
-        return claude_home / "trend-radar"
     except ValueError:
         return CODE_ROOT
+    # Installed under ~/.claude/skills. Prefer the new data dir, but fall back to
+    # the legacy ~/.claude/trend-radar when it exists and the new one doesn't, so
+    # installs that predate the trendvane rename keep their config.
+    new_data = claude_home / "trendvane"
+    legacy_data = claude_home / "trend-radar"
+    if not new_data.exists() and legacy_data.exists():
+        return legacy_data
+    return new_data
 
 
 DATA_ROOT = _resolve_data_root()
@@ -100,7 +108,7 @@ def get_logger(name: str) -> logging.Logger:
         h = logging.StreamHandler()
         h.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s"))
         logger.addHandler(h)
-        logger.setLevel(os.environ.get("TREND_RADAR_LOG", "INFO"))
+        logger.setLevel(os.environ.get("TRENDVANE_LOG", os.environ.get("TREND_RADAR_LOG", "INFO")))
     return logger
 
 

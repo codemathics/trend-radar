@@ -1,4 +1,4 @@
-"""Push generated briefs to the Trend Radar Notion database.
+"""Push generated briefs to the Trendvane Notion database.
 
 This script is normally NOT run directly — it's intended to be called by the
 skill orchestrator (or by Claude via the Notion MCP tools during a skill run).
@@ -9,7 +9,7 @@ The skill itself uses the Notion MCP tools (notion-create-pages) directly,
 because they're already authenticated to the user's workspace. This module
 defines:
   - `build_page_payload(brief)`: maps a brief dict to the exact properties
-    schema expected by the Trend Radar database
+    schema expected by the Trendvane database
   - `format_for_mcp(briefs)`: shapes a list of briefs into the MCP
     create-pages payload (parent + pages[])
 """

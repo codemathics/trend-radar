@@ -1,4 +1,4 @@
-# trend-radar runtime deps
+# trendvane runtime deps
 # install: pip install -r requirements.txt --break-system-packages
 #
 # Stdlib-only fetchers (HN, Reddit, TikTok, YouTube, Product Hunt) don't need

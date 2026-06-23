@@ -1,4 +1,4 @@
-# Script Structures, Trend Radar
+# Script Structures, Trendvane
 
 Three lengths. Each has a beat sheet the generator fills in. The engine picks length based on trend complexity (heuristic below).
 

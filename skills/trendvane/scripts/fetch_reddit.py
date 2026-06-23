@@ -32,7 +32,7 @@ log = get_logger("reddit")
 
 # Reddit requires a unique, descriptive User-Agent. Generic / library UAs get
 # rate-limited or 403'd hard.
-USER_AGENT = "python:trend-radar:0.2 (by /u/trend-radar)"
+USER_AGENT = "python:trendvane:0.2 (by /u/trendvane)"
 MIN_SCORE = 200
 LIMIT_PER_SUB = 25
 
