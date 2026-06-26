@@ -247,7 +247,7 @@ say: "Reddit changed its rules, so it needs a quick free app. I can't open Reddi
    • secret: the longer string on the line labeled 'secret'
 6. paste both here, the client id first, then the secret"
 
-once you have any of these, write them into `<DATA_DIR>/memory/secrets.json`. include only the keys they actually gave you and leave the rest as empty strings:
+once you have any of these, write them into `<DATA_DIR>/memory/secrets.json`. keep all four keys in the file, fill in the ones they gave you, and set the rest to empty strings (the fetchers simply skip any source whose key is empty):
 ```json
 {
   "YT_API_KEY": "<youtube key or empty>",
