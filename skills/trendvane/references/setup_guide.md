@@ -212,23 +212,62 @@ if they don't have examples handy, tell them it's optional: "You can add your re
 
 ---
 
-### step 6 - api keys (optional)
+### step 6 - optional sources (youtube, product hunt, reddit)
 
-say: "Two optional API keys give you better coverage - YouTube Data API and Product Hunt. Want to add them now? You can always skip this and add them later."
+three optional sources widen your coverage. all free, a few minutes each. offer them, but never block setup on them. read the steps to the user one at a time and wait for each value before moving on, so a non-technical user can follow click by click.
 
-if they want to:
-- youtube: "Go to console.cloud.google.com - APIs & Services - YouTube Data API v3 - Create credentials - API Key. Paste it here."
-- product hunt: "Go to api.producthunt.com/v2/docs, create a developer app, and get your API token."
+say: "Three optional sources give you wider coverage: YouTube, Product Hunt, and Reddit. They're all free and quick to set up. Want to add any now? You can always skip and add them later."
 
-write `<DATA_DIR>/memory/secrets.json`:
+**youtube** (a reliable second source across every niche):
+say: "YouTube, step by step:
+1. go to console.cloud.google.com and sign in with a Google account
+2. at the top, create a new project (name it anything) or pick an existing one
+3. open the left menu → APIs & Services → Library, search 'YouTube Data API v3', open it, click Enable
+4. go to APIs & Services → Credentials → Create credentials → API key
+5. copy the key it shows (it starts with 'AIza') and paste it here"
+
+**product hunt** (great for AI tools and product launches):
+say: "Product Hunt:
+1. go to api.producthunt.com/v2/docs and sign in
+2. create an application (any name; for the redirect URL you can put https://localhost)
+3. on the app page, generate the 'Developer Token' and paste it here"
+
+**reddit** (covers all your niche subreddits). reddit now blocks anonymous access, so this needs a free "script" app. important: you (the agent) cannot open reddit's settings page yourself, the browser tool refuses reddit.com/prefs/apps, so hand the clicks to the user and collect two values back.
+
+say: "Reddit changed its rules, so it needs a quick free app. I can't open Reddit's settings page for you, so please do these clicks, then paste me two short values:
+1. go to reddit.com/prefs/apps and sign in
+2. scroll to the bottom and click 'are you a developer? create an app...' (or 'create another app...')
+3. fill in the small form:
+   • name: trendvane
+   • choose the 'script' option (this part matters, not 'web app' or 'installed app')
+   • redirect uri: http://localhost:8080 (it's required but never actually used)
+4. click 'create app'
+5. the app now appears with the two values I need:
+   • client id: the short random string directly under the app's name (just below the words 'personal use script')
+   • secret: the longer string on the line labeled 'secret'
+6. paste both here, the client id first, then the secret"
+
+once you have any of these, write them into `<DATA_DIR>/memory/secrets.json`. keep all four keys in the file, fill in the ones they gave you, and set the rest to empty strings (the fetchers simply skip any source whose key is empty):
 ```json
 {
-  "YT_API_KEY": "<key or leave empty>",
-  "PH_TOKEN": "<token or leave empty>"
+  "YT_API_KEY": "<youtube key or empty>",
+  "PH_TOKEN": "<product hunt token or empty>",
+  "REDDIT_CLIENT_ID": "<reddit script-app client id or empty>",
+  "REDDIT_CLIENT_SECRET": "<reddit script-app secret or empty>"
 }
 ```
 
-if they skip: move on without any comment about it.
+if they added reddit, confirm it works right away: run `python3 <CODE_DIR>/scripts/fetch_reddit.py` and check it logs a real fetch (a "fetched N posts" line, not "reddit skipped"). if it still says skipped, the id and secret were probably swapped or mistyped, ask them to re-paste.
+
+if they skip everything: move on without any comment about it.
+
+---
+
+### step 6b - how tiktok, x, and instagram work (no setup needed)
+
+these three never use a key, so there's nothing to install for them, but tell the user how they arrive so tiktok doesn't look broken. tiktok's public trending api is locked down, and x and instagram have no free api, so trendvane reaches them a different way: when a morning run can't find 3 strong trends from the keyed sources, the skill opens these sites inside Claude-in-Chrome and reads what's trending there. this is the "tier 2" fallback.
+
+say, in plain terms: "TikTok, X, and Instagram need zero setup and no keys. When the morning run wants more trends, it quietly checks them through your Chrome browser using the Claude for Chrome extension. If you want that extra coverage, just keep that extension installed and connected. If it's ever not connected, nothing breaks, the run simply leans on Hacker News, YouTube, Product Hunt, and Reddit instead."
 
 ---
 

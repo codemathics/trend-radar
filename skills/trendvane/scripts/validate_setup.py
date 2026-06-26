@@ -106,11 +106,18 @@ if secrets_path.exists():
         secrets = json.loads(secrets_path.read_text())
         check("YT_API_KEY set", bool(secrets.get("YT_API_KEY")), "youtube fetcher will be skipped", warn=True)
         check("PH_TOKEN set", bool(secrets.get("PH_TOKEN")), "product hunt fetcher will be skipped", warn=True)
+        reddit_ok = bool(secrets.get("REDDIT_CLIENT_ID")) and bool(secrets.get("REDDIT_CLIENT_SECRET"))
+        check(
+            "Reddit creds set",
+            reddit_ok,
+            "reddit fetcher will be skipped - needs REDDIT_CLIENT_ID + REDDIT_CLIENT_SECRET (free script app at reddit.com/prefs/apps)",
+            warn=True,
+        )
     except json.JSONDecodeError:
         check("secrets.json valid json", False, "secrets.json is not valid json")
 else:
-    print(f"{WARN}  secrets.json not found - youtube and product hunt fetchers will be skipped")
-    warnings.append("no secrets.json - youtube and product hunt disabled")
+    print(f"{WARN}  secrets.json not found - youtube, product hunt, and reddit fetchers will be skipped")
+    warnings.append("no secrets.json - youtube, product hunt, and reddit disabled")
 
 
 # ---------------------------------------------------------------------------
