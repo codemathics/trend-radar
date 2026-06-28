@@ -52,7 +52,7 @@ def make_member(**kw):
     return base
 
 
-# Minimal niche config used across tests — note categories are data-driven here.
+# Minimal niche config used across tests - note categories are data-driven here.
 NICHES = [
     {"id": "ai", "label": "AI", "category": "AI", "weight": 3.0,
      "keywords": ["ai", "llm", "claude", "gpt", "agent"]},

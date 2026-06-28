@@ -31,7 +31,7 @@ from common import CACHE, get_logger, load_niches, now_iso
 log = get_logger("score")
 
 # ---------------------------------------------------------------------------
-# Tunables (defaults — every one can be overridden per-creator in my_niches.json)
+# Tunables (defaults - every one can be overridden per-creator in my_niches.json)
 # ---------------------------------------------------------------------------
 
 DEFAULT_MIN_SCORE_FOR_PICK = 60

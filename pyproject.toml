@@ -4,11 +4,11 @@
 
 [tool.ruff]
 line-length = 120
-target-version = "py39"
+target-version = "py310"
 extend-exclude = ["**/cache", "**/briefings"]
 
 [tool.ruff.lint]
-# F = pyflakes (real bugs: undefined names, unused imports) — enforced in CI.
+# F = pyflakes (real bugs: undefined names, unused imports) - enforced in CI.
 # The rest are recommended for local dev; run `ruff check` and `ruff check --fix`.
 select = ["E", "F", "W", "I", "B", "UP"]
 # Many config/data literals (keyword lists, niche taxonomies) are intentionally

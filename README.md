@@ -178,7 +178,7 @@ open `memory/my_niches.json`. the key fields:
 
 **`weight`:** how much to boost this niche's score relative to others. in the default config, ai is 3x, product design and filmmaking are 2x, and everything else is 1x. adjust to match your actual posting priorities. the niche_fit score is normalized against the *highest* weight you've configured, so re-weighting (or dropping a niche entirely) never silently caps your top niche below a full score.
 
-**`category`:** the notion `category` select value written for trends matched to this niche. set this to whatever options your notion database uses — the taxonomy is fully data-driven, so a different creator's categories work with no code change. (omit it and trendvane falls back to the built-in label map.)
+**`category`:** the notion `category` select value written for trends matched to this niche. set this to whatever options your notion database uses - the taxonomy is fully data-driven, so a different creator's categories work with no code change. (omit it and trendvane falls back to the built-in label map.)
 
 **`keywords`:** the terms the scoring engine matches against trend text. be specific. "ai coding" catches more signal than just "ai".
 
@@ -434,7 +434,7 @@ each dimension is 0-1 before weighting. the final score is multiplied by 100. on
 
 **originality** penalizes trends whose keywords overlap with anything you've already covered in the past 30 days (tracked in `cache/seen_trends.json`).
 
-**selection:** the top `trends_per_day` qualifying clusters are chosen (3 by default). at least one slot is reserved for your `priority_niche_id` — or, if that's unset, your highest-weighted niche — when a qualifying trend exists in it. the remaining slots avoid duplicate categories unless there's no other option.
+**selection:** the top `trends_per_day` qualifying clusters are chosen (3 by default). at least one slot is reserved for your `priority_niche_id` - or, if that's unset, your highest-weighted niche - when a qualifying trend exists in it. the remaining slots avoid duplicate categories unless there's no other option.
 
 ---
 
@@ -569,7 +569,7 @@ in `memory/my_niches.json`, set `min_score_for_pick` (defaults to 60):
 "min_score_for_pick": 60
 ```
 
-lower it to get more picks even from weaker signal days. raise it to only publish when you have strong trending content. no code change needed — the constant in `scripts/score_trends.py` is just the fallback default.
+lower it to get more picks even from weaker signal days. raise it to only publish when you have strong trending content. no code change needed - the constant in `scripts/score_trends.py` is just the fallback default.
 
 ### change the dedup window
 
