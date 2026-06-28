@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dev tooling
+        run: pip install -r requirements-dev.txt
+
+      # Gate on the high-signal pyflakes rules (undefined names, unused imports).
+      # The fuller ruleset in pyproject.toml is for local `ruff check`.
+      - name: Lint (ruff)
+        run: ruff check --select F skills/trendvane/scripts skills/trendvane/tests
+
+      - name: Unit tests
+        run: python -m unittest discover -s skills/trendvane/tests -v

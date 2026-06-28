@@ -26,17 +26,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from common import CACHE, MEMORY, get_logger, load_niches, now_iso
+from common import CACHE, get_logger, load_niches, now_iso
 
 log = get_logger("score")
 
 # ---------------------------------------------------------------------------
-# Tunables
+# Tunables (defaults — every one can be overridden per-creator in my_niches.json)
 # ---------------------------------------------------------------------------
 
-MIN_SCORE_FOR_PICK = 60
-TARGET_PICKS = 3
-SCORING = {
+DEFAULT_MIN_SCORE_FOR_PICK = 60
+DEFAULT_TARGET_PICKS = 3
+DEFAULT_SCORING = {
     "niche_fit": 0.40,
     "velocity": 0.25,
     "cross_platform": 0.15,
@@ -44,6 +44,34 @@ SCORING = {
     "originality": 0.10,
 }
 SEEN_TRENDS_WINDOW_DAYS = 30
+
+# Fallback label -> category mapping, used only when a niche in the config does
+# not declare its own "category". Keeping this lets old configs (which predate
+# the per-niche "category" field) keep producing the same Notion category values.
+DEFAULT_LABEL_TO_CATEGORY = {
+    "AI / LLMs / Models": "AI",
+    "Product Design": "Product Design",
+    "Filmmaking": "Filmmaking",
+    "Tech / Software / Devices": "Tech",
+    "How-To / Tutorials": "How-to",
+    "Lifestyle / Creator": "Lifestyle",
+    "Business / Investments": "Business",
+}
+# When a niche has neither a "category" nor a known label, fall back to this.
+FALLBACK_CATEGORY = "Tech"
+
+
+def niche_category(niche: dict) -> str:
+    """Resolve a niche's Notion category, data-driven first.
+
+    Priority: explicit per-niche ``category`` → legacy label map → fallback.
+    This is what makes the taxonomy portable to any creator: declare a
+    ``category`` on each niche and no code change is needed.
+    """
+    explicit = niche.get("category")
+    if explicit:
+        return explicit
+    return DEFAULT_LABEL_TO_CATEGORY.get(niche.get("label", ""), FALLBACK_CATEGORY)
 
 
 # ---------------------------------------------------------------------------
@@ -182,11 +210,19 @@ def cluster_candidates(candidates: list[dict], min_overlap: float = 0.45) -> lis
 # ---------------------------------------------------------------------------
 
 def score_niche_fit(cluster: Cluster, niches: list[dict]) -> tuple[float, str, str]:
-    """Returns (score_0_1, matched_niche_id, category_label)."""
+    """Returns (score_0_1, matched_niche_id, category_label).
+
+    The normalization divides by the *configured* maximum niche weight rather
+    than a hardcoded constant, so a creator can re-weight their niches (or drop
+    the AI niche entirely) without the highest-weighted niche silently failing
+    to reach a 1.0 niche_fit.
+    """
     text = (cluster.canonical_title + " " + " ".join(m.get("raw_text", "") for m in cluster.members)).lower()
     text_toks = tokenize(text)
 
-    best_score, best_id, best_label = 0.0, "", ""
+    max_weight = max((n.get("weight", 1.0) for n in niches), default=1.0) or 1.0
+
+    best_score, best_id, best_category = 0.0, "", ""
     for niche in niches:
         keywords = [k.lower() for k in niche.get("keywords", [])]
         weight = niche.get("weight", 1.0)
@@ -203,24 +239,14 @@ def score_niche_fit(cluster: Cluster, niches: list[dict]) -> tuple[float, str, s
             continue
         # Normalize: max possible is min(len(keywords), 8), weighted by niche weight
         raw = min(hits, 8) / 8.0
-        weighted = raw * weight  # AI 3x, PD/Film 2x, others 1x
+        weighted = raw * weight  # scaled by the niche's configured weight
         if weighted > best_score:
             best_score = weighted
             best_id = niche["id"]
-            best_label = niche["label"]
+            best_category = niche_category(niche)
     # Cap at 1.0 even after niche weighting (the weight already differentiates picks)
-    normalized = min(best_score / 3.0, 1.0)  # AI's 3x = 1.0 max
-    # Map label -> Notion category select value
-    label_to_cat = {
-        "AI / LLMs / Models": "AI",
-        "Product Design": "Product Design",
-        "Filmmaking": "Filmmaking",
-        "Tech / Software / Devices": "Tech",
-        "How-To / Tutorials": "How-to",
-        "Lifestyle / Creator": "Lifestyle",
-        "Business / Investments": "Business",
-    }
-    return normalized, best_id, label_to_cat.get(best_label, "Tech")
+    normalized = min(best_score / max_weight, 1.0)
+    return normalized, best_id, best_category or FALLBACK_CATEGORY
 
 
 def score_velocity(cluster: Cluster, all_clusters_by_source: dict[str, list[float]]) -> tuple[float, str, str]:
@@ -348,9 +374,30 @@ def save_seen(seen_titles: list[str]) -> None:
 # Top-level pipeline
 # ---------------------------------------------------------------------------
 
+def resolve_priority_niche_id(cfg: dict, niches: list[dict]) -> str:
+    """The niche we force at least one daily pick from.
+
+    Explicit ``priority_niche_id`` in the config wins; otherwise we fall back to
+    the highest-weighted niche. This replaces the old hardcoded ``"ai"`` so the
+    "force one top-niche pick" rule works for any creator's taxonomy.
+    """
+    explicit = cfg.get("priority_niche_id")
+    if explicit:
+        return explicit
+    if niches:
+        return max(niches, key=lambda n: n.get("weight", 1.0)).get("id", "")
+    return ""
+
+
 def run() -> list[dict]:
     cfg = load_niches()
     niches = cfg.get("niches", [])
+
+    # Config-driven tunables (fall back to module defaults when absent).
+    scoring = {**DEFAULT_SCORING, **cfg.get("scoring_weights", {})}
+    min_score = cfg.get("min_score_for_pick", DEFAULT_MIN_SCORE_FOR_PICK)
+    target_picks = cfg.get("trends_per_day", DEFAULT_TARGET_PICKS)
+    priority_niche_id = resolve_priority_niche_id(cfg, niches)
 
     # 1. Load + brand-safe filter
     raw = load_today_candidates()
@@ -380,43 +427,44 @@ def run() -> list[dict]:
         cl.primary_url = best_m["url"]
 
         cl.final_score = (
-            cl.niche_fit * SCORING["niche_fit"]
-            + cl.velocity * SCORING["velocity"]
-            + cl.cross_platform * SCORING["cross_platform"]
-            + cl.recency * SCORING["recency"]
-            + cl.originality * SCORING["originality"]
+            cl.niche_fit * scoring["niche_fit"]
+            + cl.velocity * scoring["velocity"]
+            + cl.cross_platform * scoring["cross_platform"]
+            + cl.recency * scoring["recency"]
+            + cl.originality * scoring["originality"]
         )
 
-    # 4. Filter + pick top 3 (forcing one AI when available)
+    # 4. Filter + pick top N (forcing one priority-niche pick when available)
     ranked = sorted(clusters, key=lambda c: c.final_score, reverse=True)
-    qualifying = [c for c in ranked if c.final_score * 100 >= MIN_SCORE_FOR_PICK and c.matched_niche_id]
+    qualifying = [c for c in ranked if c.final_score * 100 >= min_score and c.matched_niche_id]
 
     picks: list[Cluster] = []
-    ai_picks = [c for c in qualifying if c.matched_niche_id == "ai"]
-    if ai_picks:
-        picks.append(ai_picks[0])
+    if priority_niche_id:
+        priority_picks = [c for c in qualifying if c.matched_niche_id == priority_niche_id]
+        if priority_picks:
+            picks.append(priority_picks[0])
 
     for c in qualifying:
         if c in picks:
             continue
-        if len(picks) >= TARGET_PICKS:
+        if len(picks) >= target_picks:
             break
-        # Avoid duplicate categories in the daily 3 unless we have to
-        if c.category in {p.category for p in picks} and len(picks) < TARGET_PICKS - 1:
+        # Avoid duplicate categories in the daily set unless we have to
+        if c.category in {p.category for p in picks} and len(picks) < target_picks - 1:
             continue
         picks.append(c)
 
-    # Backfill if we still have fewer than 3
-    if len(picks) < TARGET_PICKS:
+    # Backfill if we still have fewer than the target
+    if len(picks) < target_picks:
         for c in qualifying:
             if c in picks:
                 continue
             picks.append(c)
-            if len(picks) >= TARGET_PICKS:
+            if len(picks) >= target_picks:
                 break
 
     log.info(
-        f"picked {len(picks)}/{TARGET_PICKS} trends "
+        f"picked {len(picks)}/{target_picks} trends "
         f"(out of {len(qualifying)} qualifying, {len(clusters)} clusters)"
     )
 

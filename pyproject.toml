@@ -1,0 +1,19 @@
+# Tooling config for trendvane. The skill itself ships as plain scripts (only
+# pytrends as a runtime dep); this file configures the linter + test discovery
+# for development and CI.
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+extend-exclude = ["**/cache", "**/briefings"]
+
+[tool.ruff.lint]
+# F = pyflakes (real bugs: undefined names, unused imports) — enforced in CI.
+# The rest are recommended for local dev; run `ruff check` and `ruff check --fix`.
+select = ["E", "F", "W", "I", "B", "UP"]
+# Many config/data literals (keyword lists, niche taxonomies) are intentionally
+# long; line length isn't worth churning over here.
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["common"]

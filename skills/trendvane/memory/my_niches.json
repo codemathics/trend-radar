@@ -14,11 +14,14 @@
   },
   "cadence_target_per_week": 3,
   "trends_per_day": 3,
+  "min_score_for_pick": 60,
+  "priority_niche_id": "ai",
 
   "niches": [
     {
       "id": "ai",
       "label": "AI / LLMs / Models",
+      "category": "AI",
       "weight": 3.0,
       "keywords": [
         "AI", "LLM", "GPT", "Claude", "Gemini", "Llama", "Mistral",
@@ -35,6 +38,7 @@
     {
       "id": "product_design",
       "label": "Product Design",
+      "category": "Product Design",
       "weight": 2.0,
       "keywords": [
         "product design", "UI", "UX", "interaction design", "Figma",
@@ -50,6 +54,7 @@
     {
       "id": "filmmaking",
       "label": "Filmmaking",
+      "category": "Filmmaking",
       "weight": 2.0,
       "keywords": [
         "filmmaking", "cinematography", "color grading", "DaVinci Resolve",
@@ -65,6 +70,7 @@
     {
       "id": "tech",
       "label": "Tech / Software / Devices",
+      "category": "Tech",
       "weight": 1.0,
       "keywords": [
         "Apple", "iPhone", "Vision Pro", "M5", "Pixel", "Samsung",
@@ -79,6 +85,7 @@
     {
       "id": "how_to",
       "label": "How-To / Tutorials",
+      "category": "How-to",
       "weight": 1.0,
       "keywords": [
         "how to", "tutorial", "step by step", "build with", "automate",
@@ -91,6 +98,7 @@
     {
       "id": "lifestyle",
       "label": "Lifestyle / Creator",
+      "category": "Lifestyle",
       "weight": 1.0,
       "keywords": [
         "day in the life", "creator life", "remote work", "digital nomad",
@@ -104,6 +112,7 @@
     {
       "id": "business",
       "label": "Business / Investments",
+      "category": "Business",
       "weight": 1.0,
       "keywords": [
         "startup", "founder", "fundraise", "Series A", "Series B",

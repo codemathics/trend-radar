@@ -159,10 +159,14 @@ open `memory/my_niches.json`. the key fields:
 ```json
 {
   "owner": "your-name",
+  "priority_niche_id": "ai",
+  "min_score_for_pick": 60,
+  "trends_per_day": 3,
   "niches": [
     {
       "id": "ai",
       "label": "ai / llms / models",
+      "category": "AI",
       "weight": 3.0,
       "keywords": ["ai", "llm", "claude", "agent", "..."],
       "sources_priority": ["hackernews", "reddit_ai", "youtube"],
@@ -172,11 +176,15 @@ open `memory/my_niches.json`. the key fields:
 }
 ```
 
-**`weight`:** how much to boost this niche's score relative to others. in the default config, ai is 3x, product design and filmmaking are 2x, and everything else is 1x. adjust to match your actual posting priorities.
+**`weight`:** how much to boost this niche's score relative to others. in the default config, ai is 3x, product design and filmmaking are 2x, and everything else is 1x. adjust to match your actual posting priorities. the niche_fit score is normalized against the *highest* weight you've configured, so re-weighting (or dropping a niche entirely) never silently caps your top niche below a full score.
+
+**`category`:** the notion `category` select value written for trends matched to this niche. set this to whatever options your notion database uses — the taxonomy is fully data-driven, so a different creator's categories work with no code change. (omit it and trendvane falls back to the built-in label map.)
 
 **`keywords`:** the terms the scoring engine matches against trend text. be specific. "ai coding" catches more signal than just "ai".
 
 **`subreddits`:** which subreddits the reddit fetcher hits for this niche.
+
+**`priority_niche_id`** (top level): the niche id that always gets at least one of the daily picks when a qualifying trend exists in it. defaults to your highest-weighted niche if unset. **`min_score_for_pick`** and **`trends_per_day`** (top level) control the qualifying-score threshold and how many trends are picked each day.
 
 **`brand_safe_exclusions`:** at the bottom of the file, a list of blocked topics (politics, alcohol, gambling) and regex patterns. add anything you'd never want to post about.
 
@@ -411,7 +419,7 @@ final_score = (niche_fit      x 0.40)
             + (originality    x 0.10)
 ```
 
-each dimension is 0-1 before weighting. the final score is multiplied by 100. only trends scoring >= 60 qualify as picks.
+each dimension is 0-1 before weighting. the final score is multiplied by 100. only trends scoring >= 60 qualify as picks (configurable via `min_score_for_pick`, and the dimension weights above come from `scoring_weights` in your config).
 
 **niche fit** is computed by counting keyword hits in the trend's title and raw text, then multiplying by the niche's weight. a single ai-niche match outscores multiple matches in an unweighted niche.
 
@@ -426,7 +434,7 @@ each dimension is 0-1 before weighting. the final score is multiplied by 100. on
 
 **originality** penalizes trends whose keywords overlap with anything you've already covered in the past 30 days (tracked in `cache/seen_trends.json`).
 
-**selection:** the top 3 qualifying clusters are chosen. at least one slot is reserved for your highest-weighted niche when a qualifying trend exists in it. the remaining slots avoid duplicate categories unless there's no other option.
+**selection:** the top `trends_per_day` qualifying clusters are chosen (3 by default). at least one slot is reserved for your `priority_niche_id` — or, if that's unset, your highest-weighted niche — when a qualifying trend exists in it. the remaining slots avoid duplicate categories unless there's no other option.
 
 ---
 
@@ -555,17 +563,17 @@ if velocity is most important to you (you only want fast-rising trends), bump it
 
 ### change the minimum score threshold
 
-in `scripts/score_trends.py`, line 37:
+in `memory/my_niches.json`, set `min_score_for_pick` (defaults to 60):
 
-```python
-MIN_SCORE_FOR_PICK = 60
+```json
+"min_score_for_pick": 60
 ```
 
-lower it to get more picks even from weaker signal days. raise it to only publish when you have strong trending content.
+lower it to get more picks even from weaker signal days. raise it to only publish when you have strong trending content. no code change needed — the constant in `scripts/score_trends.py` is just the fallback default.
 
 ### change the dedup window
 
-in `scripts/score_trends.py`, line 46:
+in `scripts/score_trends.py`:
 
 ```python
 SEEN_TRENDS_WINDOW_DAYS = 30
@@ -623,6 +631,26 @@ the skill is designed to degrade gracefully. these are the expected failure stat
 | notion write fails | brief saved to `briefings/YYYY-MM-DD.md`, flagged as `[NOTION SYNC FAILED]` in chat |
 | `voice_examples.md` is empty | claude falls back to `script_structures.md` defaults, flags it in the briefing |
 | `notion_config.json` missing | claude skips the notion write, saves locally, reports the issue |
+
+---
+
+## development
+
+the scoring + clustering logic has a stdlib-only test suite (no extra deps):
+
+```bash
+python3 -m unittest discover -s skills/trendvane/tests -v
+```
+
+linting uses [ruff](https://docs.astral.sh/ruff/) (config in `pyproject.toml`):
+
+```bash
+pip install -r requirements-dev.txt
+ruff check skills/trendvane/scripts skills/trendvane/tests
+ruff check --fix skills/trendvane/scripts   # auto-fix what it can
+```
+
+both run in ci on every push and pull request (see `.github/workflows/ci.yml`). ci gates on the pyflakes (`F`) rules plus the test suite.
 
 ---
 
